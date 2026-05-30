@@ -1,0 +1,148 @@
+body {
+  font-family: 'Noto Sans', sans-serif;
+  color: #202124;
+}
+
+a {
+  color: #2563eb;
+}
+
+.footer .icon-link {
+  font-size: 25px;
+  color: #000;
+}
+
+.link-block a {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.dnerf {
+  font-variant: small-caps;
+  letter-spacing: 0.03em;
+}
+
+.hero-body {
+  padding-bottom: 2.5rem;
+}
+
+.teaser .hero-body {
+  padding-top: 0;
+  padding-bottom: 2.5rem;
+}
+
+.teaser {
+  font-family: 'Google Sans', sans-serif;
+}
+
+.publication-title {
+  font-family: 'Google Sans', sans-serif;
+  line-height: 1.08;
+}
+
+.publication-authors {
+  font-family: 'Google Sans', sans-serif;
+}
+
+.publication-authors a {
+  color: hsl(204, 86%, 53%) !important;
+}
+
+.publication-authors a:hover {
+  text-decoration: underline;
+}
+
+.author-block {
+  display: inline-block;
+}
+
+.publication-venue {
+  color: #555;
+  font-weight: 700;
+  margin-top: 0.75rem;
+}
+
+.subtitle {
+  line-height: 1.45;
+}
+
+.body-image {
+  margin: 0 auto !important;
+  padding: 8px 0 12px 0 !important;
+  max-width: 100%;
+}
+
+.figure-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 1.1rem;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  margin: 1.2rem 0;
+}
+
+.figure-card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.result-card {
+  height: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 1.25rem;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+}
+
+.result-card .metric {
+  font-family: 'Google Sans', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #1f6feb;
+  margin-bottom: 0.4rem;
+}
+
+.kicker {
+  display: inline-block;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: #eef6ff;
+  color: #1d4ed8;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 0.8rem;
+}
+
+.section-title {
+  font-family: 'Google Sans', sans-serif;
+}
+
+.pipeline-card {
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  padding: 1rem;
+  height: 100%;
+  background: #fbfdff;
+}
+
+.pipeline-card h3 {
+  font-family: 'Google Sans', sans-serif;
+  font-weight: 700;
+}
+
+pre {
+  border-radius: 12px;
+  background: #f6f8fa;
+  border: 1px solid #e5e7eb;
+}
+
+.hero.is-light {
+  background: #f8fafc;
+}
+
+.footnote {
+  font-size: 0.9rem;
+  color: #5f6368;
+}

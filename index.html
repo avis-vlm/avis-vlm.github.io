@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+    content="AVIS adaptively allocates test-time compute for VLMs by pruning visual context and scaling reasoning rollouts.">
+  <meta name="keywords" content="AVIS, VLM, test-time scaling, visual token pruning, self-consistency, VCS, VRS">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="AVIS: Adaptive Test-Time Scaling for Vision-Language Models">
+  <meta property="og:description" content="Adaptive Visual Inference Scaling balances seeing and thinking for efficient VLM reasoning.">
+  <meta property="og:image" content="./static/images/figure1_tradeoff.png">
+  <title>AVIS: Adaptive Test-Time Scaling for Vision-Language Models</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+</head>
+
+<body>
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">AVIS: Adaptive Test-Time Scaling for Vision-Language Models</h1>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><a href="https://armenjeddi.github.io/">Ahmadreza Jeddi</a><sup>1,2,3,†,*</sup>,</span>
+              <span class="author-block">Minh N. Le<sup>1,2,3,†,*</sup>,</span>
+              <span class="author-block">Amirhossein Kazerouni<sup>1,2,3,*</sup>,</span>
+              <span class="author-block"><a href="https://karaimer.github.io/">Hakki Karaimer</a><sup>1</sup>,</span>
+              <span class="author-block">Hue Nguyen<sup>1</sup>,</span>
+              <span class="author-block">Iqbal Mohomed<sup>1</sup>,</span>
+              <span class="author-block">Michael Brudno<sup>2,3</sup>,</span>
+              <span class="author-block"><a href="https://csprofkgd.github.io/">Konstantinos G. Derpanis</a><sup>1,3,4</sup>,</span>
+              <span class="author-block">Alex Levinshtein<sup>1</sup>,</span>
+              <span class="author-block">Babak Taati<sup>2,3</sup>,</span>
+              <span class="author-block">Radek Grzeszczuk<sup>1,†</sup></span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>Samsung AI Center-Toronto,</span>
+              <span class="author-block"><sup>2</sup>University of Toronto,</span>
+              <span class="author-block"><sup>3</sup>Vector Institute,</span>
+              <span class="author-block"><sup>4</sup>York University</span>
+            </div>
+
+            <div class="publication-venue">Preprint</div>
+            <p class="footnote mt-2"><sup>*</sup>Equal contribution. <sup>†</sup>Work done at Samsung.</p>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="./static/paper/avis.pdf" class="external-link button is-normal is-rounded is-dark" target="_blank" rel="noopener">
+                    <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                    <span>Paper</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://github.com/avis-vlm/avis-vlm.github.io" class="external-link button is-normal is-rounded is-dark" target="_blank" rel="noopener">
+                    <span class="icon"><i class="fab fa-github"></i></span>
+                    <span>Website Repo</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="#BibTeX" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fas fa-quote-right"></i></span>
+                    <span>BibTeX</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body has-text-centered">
+        <div class="figure-card">
+          <img src="./static/images/figure1_tradeoff.png" alt="AVIS accuracy-compute trade-off on image and video benchmarks">
+        </div>
+        <h2 class="subtitle has-text-centered">
+          <span class="dnerf">AVIS</span> treats VLM inference as a balance between <b>seeing</b> and <b>thinking</b>:
+          it removes redundant visual context, then spends the saved compute on reasoning rollouts only when they are useful.
+        </h2>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+      <h1 class="title is-2 section-title">Overview</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="content has-text-justified">
+        <p>
+          Chain-of-thought prompting and test-time scaling can improve visual reasoning, but they are expensive:
+          high-resolution images and videos create long visual prefixes, while repeated reasoning rollouts increase decoding cost.
+          AVIS frames this as a joint test-time allocation problem over two coupled axes: <b>Visual Context Scaling</b> (VCS),
+          which controls how many visual tokens are retained, and <b>Visual Reasoning Scaling</b> (VRS), which controls how many
+          reasoning trajectories are sampled and aggregated.
+        </p>
+      </div>
+
+      <div class="columns is-variable is-4 mt-4">
+        <div class="column">
+          <div class="pipeline-card">
+            <h3>1. See less</h3>
+            <p>Use Key Diversity Visual pruning to remove redundant visual tokens before the language-model prefill.</p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="pipeline-card">
+            <h3>2. Think adaptively</h3>
+            <p>Use a lightweight difficulty predictor to choose the rollout budget K for self-consistency.</p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="pipeline-card">
+            <h3>3. Reuse prefill</h3>
+            <p>Run K shared-prefill rollouts, aggregate answers by majority vote, and keep compute below the vanilla baseline.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+      <h1 class="title is-2 section-title">Method</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="figure-card">
+        <img src="./static/images/figure2_method.png" alt="AVIS method diagram">
+      </div>
+
+      <div class="content has-text-justified">
+        <p>
+          AVIS has two small, deployment-friendly decisions. First, <b>adaptive KDV</b> scores visual tokens using diversity in
+          attention-key space and keeps a sample-dependent subset of tokens. Second, a <b>difficulty-aware rollout selector</b>
+          maps a predicted solvability score to K in {1, 3, 5, 7}. Easy examples use little compute, hopeless examples avoid
+          wasteful rollouts, and hard-but-solvable examples receive the largest reasoning budget.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+      <h1 class="title is-2 section-title">Main Results</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-variable is-4">
+        <div class="column">
+          <div class="result-card has-text-centered">
+            <div class="metric">-52%</div>
+            <p><b>image FLOPs</b><br>with +1.9 average score over vanilla</p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="result-card has-text-centered">
+            <div class="metric">-66%</div>
+            <p><b>video FLOPs</b><br>with +1.3 average score over vanilla</p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="result-card has-text-centered">
+            <div class="metric">3.7%</div>
+            <p><b>matched-FLOPs gain</b><br>over the closest fixed policy</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="figure-card">
+        <img src="./static/images/table1_main_results.png" alt="Main benchmark results across image and video VQA tasks">
+      </div>
+
+      <div class="columns is-variable is-4">
+        <div class="column is-5">
+          <div class="figure-card">
+            <img src="./static/images/figure3_heatmap.png" alt="VCS-VRS trade-off heatmap">
+          </div>
+        </div>
+        <div class="column is-7">
+          <div class="figure-card">
+            <img src="./static/images/table2_matched_flops.png" alt="Matched-FLOPs comparison table">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero is-light is-small">
+    <div class="hero-body has-text-centered">
+      <h1 class="title is-2 section-title">Latency and RL Post-Training</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="content has-text-justified">
+        <p>
+          Shared-prefill inference makes adaptive reasoning practical: AVIS keeps wall-clock latency close to vanilla while improving
+          the accuracy-compute trade-off. The same allocation idea also transfers to RL post-trained VLMs such as VL-Rethinker,
+          Vision-R1, and OpenVLThinker.
+        </p>
+      </div>
+
+      <div class="columns is-variable is-4">
+        <div class="column is-4">
+          <div class="figure-card">
+            <img src="./static/images/table3_latency.png" alt="Latency comparison for shared-prefill inference">
+          </div>
+        </div>
+        <div class="column is-8">
+          <div class="figure-card">
+            <img src="./static/images/table4_rl_results.png" alt="AVIS results on RL post-trained VLMs">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title section-title">BibTeX</h2>
+      <pre><code>@misc{jeddi2026avis,
+  title        = {AVIS: Adaptive Test-Time Scaling for Vision--Language Models},
+  author       = {Ahmadreza Jeddi and Minh N. Le and Amirhossein Kazerouni and Hakki Karaimer and Hue Nguyen and Iqbal Mohomed and Michael Brudno and Konstantinos G. Derpanis and Alex Levinshtein and Babak Taati and Radek Grzeszczuk},
+  year         = {2026},
+  note         = {Preprint},
+  url          = {https://avis-vlm.github.io/}
+}</code></pre>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content has-text-centered">
+            <p>
+              Website adapted from the <a href="https://github.com/nerfies/nerfies.github.io">NeRFies</a> project-page template.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>
