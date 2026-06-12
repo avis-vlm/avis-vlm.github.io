@@ -21,12 +21,14 @@ Create or update the GitHub Pages repository named `avis-vlm.github.io`, then pu
 ## Citation
 
 ```bibtex
-@misc{jeddi2026avis,
-  title        = {AVIS: Adaptive Test-Time Scaling for Vision--Language Models},
-  author       = {Ahmadreza Jeddi and Minh N. Le and Amirhossein Kazerouni and Hakki Karaimer and Hue Nguyen and Iqbal Mohomed and Michael Brudno and Konstantinos G. Derpanis and Alex Levinshtein and Babak Taati and Radek Grzeszczuk},
-  year         = {2026},
-  note         = {Preprint},
-  url          = {https://avis-vlm.github.io/}
+@misc{jeddi2026avisadaptivetesttimescaling,
+      title={AVIS: Adaptive Test-Time Scaling for Vision-Language Models},
+      author={Ahmadreza Jeddi and Minh Ngoc Le and Amirhossein Kazerouni and Hakki Can Karaimer and Hue Nguyen and Iqbal Mohomed and Michael Brudno and Alex Levinshtein and Konstantinos G. Derpanis and Babak Taati and Radek Grzeszczuk},
+      year={2026},
+      eprint={2606.11576},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2606.11576},
 }
 ```
 
